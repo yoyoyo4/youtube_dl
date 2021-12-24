@@ -5,7 +5,15 @@ import PySimpleGUI as sg
 import os, re, sys
 from pytube import YouTube
 
+
 this_software_name = "youtube_simple_downloader"
+
+executed_from_pyfile = True # pyファイルで実行する場合はTrue、exeファイル化して実行する場合はFalse
+
+if executed_from_pyfile:
+    default_output_folder = os.path.dirname(os.path.abspath(__file__))
+else:
+    default_output_folder = os.path.dirname(sys.executable)
 
 
 # 入力用ウィンドウを表示し、ユーザーの入力を返す
@@ -46,6 +54,7 @@ def input_by_user(default_output_folder:str):
 
 
 # YouTube Objectから与えられる変数を受けてDL進捗状況を表示する
+######### pyinstallerを使用してexe化すると機能しない模様？
 def progress_Check(stream=None, chunk=None, bytes_remaining=None):
     file_size = stream.filesize
     if bytes_remaining == None: # 初期状態で0%を出力(bytes_remaining==None)
@@ -79,10 +88,10 @@ def dl_video(output_folder:str, file_extension:str, yt):
 
 
 def main():
-    default_output_folder = os.path.dirname(os.path.abspath(__file__))
     try:
         file_extension, output_folder, yt = input_by_user(default_output_folder)
         dl_video(output_folder, file_extension, yt)
+        sg.popup("ダウンロードが完了しました", no_titlebar=True)
     except SystemExit:
         pass
     except:
